@@ -1,0 +1,167 @@
+{% include "navbar/navbar.html"%}
+{% load static %}
+<!-- this goes into the block content tags space in the header file. Each page will enclose its content
+in these tags -->
+<head>
+	<!-- full calendar static dependencies -->
+	<script src='http://fullcalendar.io/js/fullcalendar-2.1.1/lib/moment.min.js'></script>
+	<script src="http://fullcalendar.io/js/fullcalendar-2.1.1/lib/jquery-ui.custom.min.js"></script>
+	<script src='http://fullcalendar.io/js/fullcalendar-2.1.1/fullcalendar.min.js'></script>
+	<link rel="stylesheet" href="{% static 'css/fullcalendar.css' %}">
+	<script src = "{% static 'js/schedule.js' %}"></script>
+	<script src="{% static 'js/initialize_modals.js' %}"></script>  
+	<script src="{% static 'js/remove_course_ajax.js' %}"></script>  
+</head>
+
+<body class = "body" style = "background-color: #f6f6f6">
+
+	<div class="container">
+	<!-- javascript parsing for calender -->
+	<script type="text/javascript">
+			{% for section in sections %}
+				var days = '{{  section.days  }}';
+				var start_time = '{{  section.start_time  }}';
+				var end_time = '{{  section.end_time  }}';
+				var section_id = '{{  section.id  }}'
+				{% for course in section.course.all  %}
+					var course_name = '{{  course.name  }}';
+				{%  endfor  %}
+				convertClassSchedule(days, start_time, end_time, course_name,section_id);
+			{% endfor %}
+	</script>
+	<h2>Your courses</h2>
+	{% for section in sections %}
+		{% empty %}
+		<h3>Add some courses and they will appear on this page</h3>
+	{% endfor %}
+		<div class="row">
+			<ul class="tabs">
+				<li class="tab tabs-fixed-width col s6"><a href="#list_view">List View</a></li>
+				<li class="tab tabs-fixed-width col s6"><a href="#grid_view">Grid View</a></li>
+			</ul>
+		</div>
+	{% for section in sections %}
+	{% if section.all %}
+		<p>You are not currently enrolled in any courses. Add courses to your schedule from the departments section</p>
+	{% endif %}
+	{% endfor %}
+	<div id="list_view">
+	{% for section in sections %}
+		{% if not sections.all %}
+			<p>You are not currently enrolled in any courses. Add courses to your schedule from the departments section</p>
+		{% endif %}
+
+		<!-- this for loop will only run once, just need to do it like this because I created M2M relationship between courses and sections -->
+		{% for course in section.course.all %}
+			<div class = "psuedo_card hoverable" id="{{course.name}}card">
+						<div class = "row flex">
+				 			<div class = "col s4">
+				 				<h2>{{  course.name  }}</h2>
+				 				<h3 class="schedule-section-header">Time: {{  section.start_time  }} - {{  section.end_time  }} {{ section.days  }}</h3>
+				 				<h3 class="schedule-section-header">Professor: {{  section.instructor  }}
+				 				<h3 class="schedule-section-header">Location: {{  section.location  }}
+				 			</div>
+				 			<div class= "col s8">
+				 				<div class="rating_display">
+				 					<span class="one_rating" id="difficulty_display{{course.id}}"><i class="material-icons rating_icon">report</i><p class="rating_header">Difficulty Rating:</p></span>
+				 					<span class="one_rating" id="time_display{{course.id}}"><i class="material-icons rating_icon">timer</i><p class="rating_header">Hours of Homeowork Per Week Rating: </p></span>
+				 					<span class="one_rating" id="interest_display{{course.id}}"><i class="material-icons rating_icon">tag_faces</i><p class="rating_header">Interest Rating: </p></span>
+				 				</div>
+				 				<div class="more_info">
+				 					<p>
+				 						Course: {{  course.department }} {{  course.course_number  }} Units: {{  course.units  }}
+				 					</p>
+				 				</div>
+				 				<div class="course_description">
+				 					<p>{{  course.description  }}</p>
+				 				</div>
+
+								<form action = '' method = "POST" class="remove_course">
+									{% csrf_token %}
+									<input type = "hidden" name = "courses[]" value = "{{section.id}}"/>
+									<input type = "hidden" name = "courseId" value = "{{section.id}}"/>
+									<!--Square brackets lead to trouble accessing variable in javascript -->
+									<input type="submit" class = "waves-effect waves-light btn course_btn remove_button" id="remove_btn_for_section_id{{  section.id  }}" name="remove" value="Remove Course">
+								</form>
+								<a class="waves-effect waves-light btn modal-trigger course_btn" href='#{{course.id}}seereviews'>Course Reviews</a>
+								<!-- script to remove schedule using fullcalender -->
+								<script>
+									console.log("btn script running");
+									$("#remove_btn_for_section_id{{  section.id  }}").click(function(e){
+										$(".schedule_object_for{{  section.id  }}").hide();
+									})
+									
+								</script>
+							</div>
+
+						</div>
+					</div>
+
+
+			<script>
+				//data is in some weird form so you need to parse the data
+				var average_difficulty = "{{  course.average_difficulty  }}".substring(28,32).replace("}","");
+				var average_interest_rating = "{{  course.average_interesting  }}".substring(29,33).replace("}","");;
+				var average_homework_time = "{{  course.average_homework  }}".substring(44,48).replace("}","");
+				$("#difficulty_display{{course.id}}").append("<p class='rating_header'>" + average_difficulty + "</p>");
+				$("#time_display{{course.id}}").append("<p class='rating_header'>" + average_homework_time + "</p>");
+				$("#interest_display{{course.id}}").append("<p class='rating_header'>" + average_interest_rating + "</p>");
+			</script>
+
+
+
+			<div class="modal" id="{{course.id}}seereviews">
+					<div class="modal-content">
+						<center>
+							<h3 class="modal-head">Reviews for {{  course.name  }}</h2>
+						</center>
+						{% for review in course.reviews.all %}
+							<p>{{  review.review_text  }}</p>
+							<h6>by {{  review.user.username  }} on {{  review.created_at }}</h6>
+						{% endfor %}
+					</div>
+					<footer>
+						<a href="#!" class="modal-close waves-effect waves-green btn-flat">Exit</a>
+					</footer>
+			</div>
+
+
+
+		{% endfor %}
+	{% endfor %}
+	</div>
+
+
+	<div id="grid_view">
+		  <div id='calendar'></div>
+
+	</div>
+</div>
+</body>
+
+
+	<!-- code for removing course -->
+	<script>
+		//removing course form database
+		$(".remove_course").click(function(e){
+			//getting course id to remove it from database
+			e.preventDefault();
+			var course_id = $("input[name=courseId]").val();
+			window.parent_element = $(this).parent().parent().parent();
+			M.toast({html: 'Course succesfully removed!'})
+			$.ajax({
+			    method: "POST",
+			    data: $(this).serialize(),
+			    url: "{{request.path}}"
+			});
+			//removing entire div of the course
+			window.parent_element.hide();
+
+		});
+	</script>
+	<!-- code to parse rating data -->
+	<script src = "{% static 'js/load_calendar.js' %}"></script>
+	<script src = "{% static 'js/initialize_tabs.js' %}"></script>
+
+
+</div>

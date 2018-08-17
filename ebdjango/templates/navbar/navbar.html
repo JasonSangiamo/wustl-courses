@@ -1,0 +1,93 @@
+{% load static %}
+<head>
+<!-- jquery-->
+	<script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+	<!-- materialize css and js-->
+<!-- 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">    	
+ -->	
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/css/materialize.min.css">
+ 	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script> -->
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+	<!-- mobile friendly -->
+	<meta name="viewport" content = "width=device-width, initial-scale=1.0">
+	<!-- custom css -->
+	<link rel="stylesheet" href="{% static 'css/style.css' %}">
+	<!-- materialize icons -->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!-- font awesome -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	<!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    
+
+</head>
+<body>
+
+	<nav class="white">
+		<div class="nav-wrapper">
+			<a href="/courses/" class="brand-logo red-text" id="site-name">WUSTLCourses</a>
+			<ul id="nav-mobile" class="right hide-on-med-and-down">
+				{% if user.is_authenticated %}   
+
+				<li><a href="/courses/" class="red-text"><i class="material-icons left">view_list</i>Departments</a></li>
+				<li><a href="/schedule/" class="red-text"><i class="material-icons left">event</i>My Schedule</a></li>
+				<li><a href="/logout/" class="red-text"><i class="material-icons left">person_pin</i>Logout</a></li> 
+				<li>    
+	            	<div class="center row nav-search">
+	                	<div class="col s12">
+	                    	<div class="row nav-search" id="topbarsearch">
+	                    		<div class="input-field col s6 s12 red-text">
+	                        		<i class="red-text material-icons prefix">search</i>
+	                        		<input type="text" placeholder="search" id="autocomplete-input" class="autocomplete red-text" >
+	                        	</div>
+	                      	</div>
+                    	</div>
+                  </div>          
+              </li>
+				{% endif %}
+			</ul>
+		</div>
+	</nav>
+
+<script>
+// var courses_json = "{{ all_courses_for_search }}";
+// var re_quote = /&quot/gi;
+// var re_semi = /;/gi;
+// var re_apostrophe = /&#39/gi;
+// courses_json = courses_json.replace(re_quote,'"').replace(re_semi,'').replace(re_apostrophe,"'");
+// console.log(courses_json);
+// console.log(typeof courses_json)
+// // console.log(course_data);
+
+$(document).ready(function () {$('input.autocomplete').autocomplete({
+			data: {
+				{% for course in all_courses_for_search %}
+					"{{course.department_abbreviation}}: {{course.course_number}} {{course.name}}": null,
+				{%  endfor  %}
+			},
+			limit: 5,
+			onAutocomplete: function(){
+				console.log($("#autocomplete-input").val());
+				var input = $("#autocomplete-input").val();
+				var colon_index = input.indexOf(":");
+				var department_abbreviation = input.substring(0, colon_index);
+				var course_without_department_abbreviation = input.substring(colon_index + 2,)
+				course_name_start_index = course_without_department_abbreviation.indexOf(" ") + 1;
+				course_name = course_without_department_abbreviation.substring(course_name_start_index,);
+				location.href="/courses/" + department_abbreviation + "#" + course_name + "card";
+			}
+
+        });
+
+});
+
+      </script>        
+
+
+
+
+
+
+
+</body>

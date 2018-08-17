@@ -1,0 +1,62 @@
+{% include "navbar/navbar.html"%}
+<body style="background-color: #f6f6f6;">
+	<div class="container">
+		<div class="row">
+			{% for course in course_name %}
+			<a href = "/courses/{{ course.department_abbreviation }}/{{course.nameID}}">
+			<div class = "col s12 m12 card card-title collapsible-header">
+				<h2>{{course.name}}</h3>
+				<h6>{{course.department_abbreviation}} {{course.course_number}}. {{course.units}}</h6>
+				<h6>{{course.lab}}</h6>
+			</div>
+			</a>
+			<div class = "col s12 m12 card card-description">
+				<h6>{{course.description}}</h6>
+			</div>
+			{% endfor %}
+		</div>
+		<div class="row">
+			<table class="striped responsive-table">
+				<tr>
+					<th>Instructor</th>
+					<th>Location</th>
+					<th>Start Time </th>
+					<th>End Time </th>
+					<th> Days </th>
+					<th> Final </th>
+					<th> Section </th>
+					<th> Add? </th>
+				</tr>
+				{% for course in course_list %}
+				<tr>
+					<td>{{ course.instructor }} </td>
+					<td>{{ course.location }}</td>
+					<td>{{ course.start_time }}</td>
+					<td>{{ course.end_time }}</td>
+					<td>{{ course.days }}</td>
+					<td>{{ course.final }}</td>
+					<td>{{ course.section }}</td>
+					
+					<td> 
+						<form action = '' method = "POST" class="add_course">
+							{% csrf_token %}
+							<input type = "hidden" name = "courses[]" value = "{{course.id}}"/>
+							<input type="submit" class = "btn" value="Add course" onclick="Materialize.toast('Course succesfully added.', 4000);">
+						</form>
+				<script type="text/javascript">
+					$(".add_course").submit(function(e){
+						e.preventDefault();
+						console.log($(this).serialize());
+						$.ajax({
+							method: "POST",
+							data: $(this).serialize(),
+							url: "{{request.path}}"
+						});
+						});
+				</script>
+				</tr>
+				{% endfor %} 
+			</table>
+		</div>
+	</div>
+</body>

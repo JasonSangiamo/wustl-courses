@@ -1,0 +1,200 @@
+{% include "navbar/navbar.html"%}
+{% load static %}
+<!-- this goes into the block content tags space in the header file. Each page will enclose its content
+in these tags -->
+<script src="{% static 'js/initialize_modals.js' %}"></script>  
+
+
+<body class = "body" style = "background-color: #f6f6f6">
+
+	<div class="container">
+			{% for course in courses %}
+				<!-- Modal content for course description when popped-->
+				<div id="{{course.id}}" class="modal">
+					<div class="modal-content">
+						<h4>{{ course.name }}</h4>
+						<p> {{course.description}} </p>
+					<!-- table in modal with all of the section info -->
+						<table class="striped responsive-table">
+							<tr>
+								<th>Instructor</th>
+								<th>Location</th>
+								<th>Start Time </th>
+								<th>End Time </th>
+								<th> Days </th>
+								<th> Final </th>
+								<th> Section </th>
+								<th> Add? </th>
+							</tr>
+							{% for section in course.sections.all %}
+								<tr>
+									<td>{{  section.instructor }}</td>
+									<td>{{  section.location  }}</td>
+									<td>{{  section.start_time  }}</td>
+									<td>{{  section.end_time  }}</td>
+									<td>{{  section.days  }}</td>
+									<td>{{  section.final  }}</td>
+									<td>{{  section.section }}</td>
+									<td> 
+										<form action = '' method = "POST" class="add_course" id="add_form_{{  section.id  }}">
+											{% csrf_token %}
+											<input type = "hidden" name = "courses[]" value = "{{section.id}}"/>
+											<input type = "hidden" name = "add_course" value = ""/>
+
+											<input type="submit" name="add_course" id="add{{section.id}}" class = "btn" value="Add course">
+										</form>
+										<!-- adding popup for adding course -->
+										<script type="text/javascript">
+											$("#add{{  section.id  }}").click(function(e){
+												e.preventDefault();
+												M.toast({html: "Course successfully added!"});
+												var data = $("#add_form_{{  section.id  }}").serialize();
+												// alert(data);
+												$.ajax({
+													method: "POST",
+													data: data,
+													url: "{{request.path}}"
+												});
+												});
+										</script>
+								</td>
+								</tr>
+
+							{% endfor %}
+						</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+					</div>
+					<div class="modal-footer">
+					<center>
+						<a href="#!" class="modal-close waves-effect waves-green btn-flat">Exit</a>
+					</center>
+					</div>
+					
+				</div>
+				<!-- Modal content for creating a course review -->
+				<div class="modal" id="{{course.id}}makereview">
+					<div class="modal-content">
+						<h6>Write Your Review!</h6>
+						<form action = '' method = "POST" class="review">
+							{% csrf_token %}
+ 							<input type = "hidden" name = "courses[]" value = "{{course.id}}"/>
+ 							<div class="input-field">
+					          <textarea id="textarea{{ course.id }}" name = "review_text[]" class="materialize-textarea"></textarea>
+					          <label for="textarea{{ course.id }}">Review</label>
+					        </div>
+					        <h6>Include some ratings!</h6>
+					        <div class="range-field" id="difficulty{{ course.id  }}">
+						      <input type="range" id="test5" name="difficulty[]" min="0" max="10" />
+					          <label for="difficulty{{ course.id }}">Difficulty</label>
+						 	</div>
+						 	<div class="range-field" id="interesting{{ course.id }}">
+						      <input type="range" id="test5" name="interesting[]" min="0" max="10" />
+					          <label for="interesting{{ course.id }}">Interesting</label>
+						 	</div>
+						 	<div class="range-field" id="homework{{ course.id }}">
+						    	<input type="range" id="test5" name="homework[]" min="0" max="20" />
+					        	<label for="homework{{ course.id }}">Hours of Homework Each Week</label>
+						 	</div>
+							<input type = "hidden" name = "add_review" value = ""/>
+	 						<footer>
+								<input type="submit" name="add_review" class = "btn modal-close" value="Submit Review" onclick="M.toast({html: 'Your review has been submitted!'})">
+							</footer>
+						 </form>
+					</div>
+
+				</div>
+				<div class="modal" id="{{course.id}}seereviews">
+					<div class="modal-content">
+						<center>
+							<h4 class="modal-head">Reviews for {{  course.name  }}</h2>
+						</center>
+						{% for review in course.reviews.all %}
+							<p>{{  review.review_text  }}</p>
+							<h6>by {{  review.user.username  }} on {{  review.created_at }}</h6>
+						{% endfor %}
+						{% if not course.reviews.all %}
+							<p class="reviews-text">We're sorry,there are currently no reviews for this course.</p>
+						{% endif %}
+					</div>
+					<footer>
+						<a href="#!" class="modal-close waves-effect waves-green btn-flat">Exit</a>
+					</footer>
+				</div>
+
+
+
+				<!-- clickable to generate modal -->
+				<!-- course.name id is used for search bar to know where to link to in the page -->
+					<div class = "psuedo_card hoverable" id="{{course.name}}card">
+						<div class = "row flex">
+				 			<div class = "col s4 valign-wrapper">
+				 				<h2 class="center-block">{{  course.name  }}</h2>
+
+				 			</div>
+				 			<div class= "col s8">
+				 				<div class="rating_display">
+				 					<span class="one_rating" id="difficulty_display{{course.id}}"><i class="material-icons rating_icon">report</i><p class="rating_header">Difficulty Rating:</p></span>
+				 					<span class="one_rating" id="time_display{{course.id}}"><i class="material-icons rating_icon">timer</i><p class="rating_header">Hours of Homeowork Per Week Rating: </p></span>
+				 					<span class="one_rating" id="interest_display{{course.id}}"><i class="material-icons rating_icon">tag_faces</i><p class="rating_header">Interest Rating: </p></span>
+				 				</div>
+				 				<div class="more_info">
+				 					<p>
+				 						Course: {{  course.department }} {{  course.course_number  }} Units: {{  course.units  }}
+				 					</p>
+				 				</div>
+				 				<div class="course_description">
+				 					<p>{{  course.description  }}</p>
+				 				</div>
+
+								<a class="waves-effect waves-light btn modal-trigger course_btn" href='#{{course.id}}'>Course Sections</a>
+								<a class="waves-effect waves-light btn modal-trigger course_btn" href='#{{course.id}}seereviews'>Course Reviews</a>
+								<a class="waves-effect waves-light btn modal-trigger course_btn" href='#{{course.id}}makereview'>Review Course</a>									
+							</div>
+
+						</div>
+					</div>
+				</a>
+				<div class = "row match-my-cols">
+
+				</div>
+				<script>
+					//data is in some weird form so you need to parse the data
+					var average_difficulty = "{{  course.average_difficulty  }}".substring(28,32).replace("}","");
+					var average_interest_rating = "{{  course.average_interesting  }}".substring(29,33).replace("}","");;
+					var average_homework_time = "{{  course.average_homework  }}".substring(44,48).replace("}","");
+					$("#difficulty_display{{course.id}}").append("<p class='rating_header'>" + average_difficulty + "</p>");
+					$("#time_display{{course.id}}").append("<p class='rating_header'>" + average_homework_time + "</p>");
+					$("#interest_display{{course.id}}").append("<p class='rating_header'>" + average_interest_rating + "</p>");
+
+				</script>
+			{% endfor %}
+
+	</div>
+</body>
+
+
+<script type="text/javascript">
+	$(".review").submit(function(e){
+		e.preventDefault();
+		$.ajax({
+			method: "POST",
+			data: $(this).serialize(),
+			url: "{{request.path}}"
+		});
+		});
+</script>
+
+
+</div>

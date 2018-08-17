@@ -25,7 +25,7 @@ SECRET_KEY = 'f-*kivv)den7!wl3v=xc$ecmkd290=gvm25_lb@slpsi)x&c#h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['django-env.cpsepmakgb.us-east-1.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['127.0.0.1','django-env.cpsepmakgb.us-east-1.elasticbeanstalk.com','wustlcourses.com', 'www.wustlcourses.com','34.231.82.100']
 
 
 # Application definition
@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'home',
+    'courses',
+    'schedule'
 ]
 
 MIDDLEWARE = [
@@ -54,10 +57,14 @@ ROOT_URLCONF = 'ebdjango.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+		],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+             	# processor to send JSON object to navbar for courses
+                'context_processors.course_search_processor.return_courses_json',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -115,6 +122,12 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.1/howto/static-files/
+# https://docs.djangoproject.com/en/1.11/howto/static-files/
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 
 STATIC_URL = '/static/'
+
+#login redirect url for after user logs in
+LOGIN_REDIRECT_URL = "/courses"
