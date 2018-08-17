@@ -206,11 +206,6 @@ input{
     min-width: 100px;
     width: 10%;
 }
-.home-text-col{
-    min-height: 100px;
-    min-width: 100px;
-    width: 90%;
-}
 .home-text-wrapper{
     margin-left: 70px;
 }
@@ -223,18 +218,30 @@ input{
     text-align: justify;
 }
 .home-icon-wrapper{
-    font-size: 4rem;
+    font-size: 7rem;
     color: #176A64;
     text-align: center;
 }
 .home-section-header-wrapper{
     text-align: center;
+    height: 50px;
 }
 .home-section-text-wrapper{
     font-size: 1.5em;
     display: inline;
-    text-align: justify;
 }
 .schedule-section-header{
     padding-left: 19px;
+}
+.home-text-column{
+    padding-left: 30px;
+    padding-right: 30px;
+    font-size: 10px;
+}
+#home-row-of-columns{
+    margin-left: 150px;
+    margin-right: 150px;
+}
+.home-icon{
+    font-size: 32px;
 }
