@@ -38,7 +38,6 @@ def home(request, template_name='home/home.html',
         if 'login' in request.POST:
             # taken from https://docs.djangoproject.com/en/1.8/_modules/django/contrib/auth/views/
             
-            username
 
 
             form = authentication_form(request, data=request.POST)

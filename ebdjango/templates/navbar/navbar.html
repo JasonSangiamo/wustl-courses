@@ -18,7 +18,12 @@
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 	<!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
+    <script>
+    	//initializing modals
+		$(document).ready(function(){
+			$('.modal').modal();
+	  	});
+    </script>
     
 
 </head>
@@ -27,7 +32,7 @@
 	<nav class="white">
 		<div class="nav-wrapper">
 			<a href="/courses/" class="brand-logo red-text" id="site-name">WUSTLCourses</a>
-			<ul id="nav-mobile" class="right hide-on-med-and-down">
+			<ul id="nav" class="right hide-on-med-and-down">
 				{% if user.is_authenticated %}   
 
 				<li><a href="/courses/" class="red-text"><i class="material-icons left">view_list</i>Departments</a></li>
@@ -36,7 +41,7 @@
 				<li>    
 	            	<div class="center row nav-search">
 	                	<div class="col s12">
-	                    	<div class="row nav-search" id="topbarsearch">
+	                    	<div class="row nav-search" id="topbarsearch search">
 	                    		<div class="input-field col s6 s12 red-text">
 	                        		<i class="red-text material-icons prefix">search</i>
 	                        		<input type="text" placeholder="search" id="autocomplete-input" class="autocomplete red-text" >

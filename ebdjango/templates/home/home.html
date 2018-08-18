@@ -1,48 +1,59 @@
 {% include "navbar/navbar.html"%}
+{% load static %}
+
 <head>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">    	
 	<title>WUSTLCourses: Home</title>
+	<script src="{% static 'js/initialize_modals.js' %}"></script>  
 </head>
 <body>
 	<div class="container" id="description">
 		<div class="row">
 			<div class="home-header-wrapper">
 				<br>			
-				<h1 class="header center">
+				<h1 class="header center bold">
 					Welcome to WUSTLCourses
 				</h1>
-				<h2 class="subheader center" id="home-subheader">Washington University's Unofficial Semester Scheduling Application</h2>
+				<h2 class="subheader center bold" id="home-subheader">Washington University's Unofficial Semester Scheduling Application</h2>
 			</div>
 		</div>
 	</div>
-	<div class="row" id="home-row-of-columns">
-		<div class="col m4 s12 home-text-column">
-			<div class="home-content-item-wrapper">
-				<div class="home-icon-wrapper">
-					<h2><i class="material-icons home-icon">schedule</i></h2>
-				</div>
-				<div class="home-section-header-wrapper">
-					<h5>Create your own personalized schedule</h5>
-				</div>
-				<div class="home-section-text-wrapper">
-					<p>Using WUSTLCourses, you can design the perfect schedule for your next semester. Choose from any classes in the upcoming semester to plan the perfect schedule for you.</p>
-				</div>
-			</div>
-		</div>
-		<div class="col m4 s12 home-text-column">
-			<div class="home-content-item-wrapper">
-				<div class="home-icon-wrapper">
-					<h2><i class="material-icons">group</i></h2>
-				</div>
-				<div class="home-section-header-wrapper">
-					<h5>Hear From Other Students</h5>
-				</div>
-				<div class="home-section-text-wrapper">
-					<p>Students can annonymously rate and review classes. Easily sift through what other students have to say in our clean and intuitive interface.</p>
+		<!-- <div class="row" id="home-row-of-columns">
+			<div class="col m6 s12 home-text-column">
+				<div class="home-content-item-wrapper">
+					<div class="home-icon-wrapper">
+						<h2><i class="material-icons home-icon">schedule</i></h2>
+					</div>
+					<div class="home-section-header-wrapper">
+						<h5>Create your own personalized schedule</h5>
+					</div>
+					<div class="home-section-text-wrapper">
+						<ul>
+							<li>Browse through every course offered at Washington University.</li>
+							<li>Choose which classes best fit your schedule and needs.</li>
+							<li>View your schedule any time in our intuitive interface.</li>
+						</ul>
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="col m4 s12 home-text-column">
+			<div class="col m6 s12 home-text-column">
+				<div class="home-content-item-wrapper">
+					<div class="home-icon-wrapper">
+						<h2><i class="material-icons">rate_review</i></h2>
+					</div>
+					<div class="home-section-header-wrapper">
+						<h5>Hear From Other Students</h5>
+					</div>
+					<div class="home-section-text-wrapper">
+						<ul>
+							<li>Inform your course decisios by reading detailed reviews from other students.</li>
+							<li>Assess the difficulty and level of work of your schedule using our ratings.</li>
+							<li>Leave your own ratings and reviews to help future students create their schuldes.</li>
+						</ul>
+					</div>
+				</div>
+			</div> -->
+		<!-- <div class="col m4 s12 home-text-column">
 			<div class="home-content-item-wrapper">
 				<div class="home-icon-wrapper">
 					<h2><i class="material-icons">rate_review</i></h2>
@@ -54,87 +65,59 @@
 					<p>Let your voice be heard. Say whatever you think about the classes you took this semester and help future students make the right decisions.</p>
 				</div>
 			</div>
-		</div>
+		</div> -->
 	</div>
 	</div>
+
 	<div class="container" id="description">
 		<div class="row">
-			<div class="col m6 s12">
-					<h2>Login</h2>
-					<form method="post">
-						{% csrf_token %}
-						{% for field in login_form %}
-							<p>
-							{{ field.label_tag }}<br>
-							{{ field }}
-							{% if field.help_text %}
-								<small style="color: grey; height: 50px;">{{ field.help_text|safe }}</small>
-							{% endif %}
-
-							{% for error in field.errors %}
-								<p style="color: red">{{ error }}</p>
-							{% endfor %}
-							</p>
-						{% endfor %}
-						<button class="waves-effect waves-light btn" name="login" type="submit">Login</button>
-					</form>
+			<div class="col m7 s12">
+				<ul class="home-page-bullet-list">
+					<li class="home-list-item">Browse all courses offered at Wash U and plan your schule for next semester.</li>
+					<li class="home-list-item">View or modify your schedule at any time in our quick, intuitive interface.</li>
+					<li class="home-list-item">Browse ratings and reviews from students all over Wash U.</li>
+				</ul>
+				<div class="center">
+					<a class="modal-trigger btn" id="home-sign-up-button"href="#sign-up-form">Create an Account</a>
 				</div>
-			<div class="col m6 s12">
-				<h2>Signup</h2>
+			</div>
+			<div class="col m5 s12">
+				<h2 class="bold">Login</h2>
 				<form method="post">
-						{% csrf_token %}
-						{% for field in signup_form %}
-							<p>
-							{{ field.label_tag }}<br>
-							{{ field }}
-							{% if field.help_text %}
-								<small style="color: grey">{{ field.help_text|safe }}</small>
-							{% endif %}
-							{% for error in field.errors %}
-								<p style="color: red">{{ error }}</p>
-							{% endfor %}
-							</p>
+					{% csrf_token %}
+					{% for field in login_form %}
+						<p>
+						{{ field.label_tag }}<br>
+						{{ field }}
+						{% if field.help_text %}
+							<small style="color: grey; height: 50px;">{{ field.help_text|safe }}</small>
+						{% endif %}
+
+						{% for error in field.errors %}
+							<p style="color: red">{{ error }}</p>
 						{% endfor %}
-					<button class ="waves-effect waves-light btn" type="submit" name ='signup'>Sign up</button>
-					<br>
+						</p>
+					{% endfor %}
+					<div class="center">
+						<button class="waves-effect waves-light btn" id="home-login-button"name="login" type="submit">
+							Login
+						</button> 
+						<div id="sign-up-now">
+							Don't have an account? 
+							<a class="modal-trigger" href="#sign-up-form"> Sign up now!</a>
+						</div>
+					</div>
 				</form>
 			</div>
 		</div>
 	</div>
-</div>
 
-
-
-
-
-
-
-<!-- 
-			
-			<div class="col s12 m4">
-				<h2 class="center"><i class="material-icons home-icon">schedule</i></h2>
-				<h5 class="center">Create your own personalized schedule</h5>
-				<p>Using WUSTLCourses, you can design the perfect schedule for your next semester. Choose from any classes in the upcoming semester to plan the perfect schedule for you.</p>
-			</div>
-			<div class="col s12 m4">
-				<h2 class="center"><i class="material-icons home-icon">group</i></h2>
-				<h5 class="center">Hear From Other Students</h5>
-				<p>Students can annonymously rate and review classes. Easily sift through what other students have to say in our clean and intuitive interface.</p>
-			</div>
-			<div class="col s12 m4">
-				<h2 class="center"><i class="material-icons home-icon">rate_review</i></h2>
-				<h5 class="center">Read and Write Reviews for Your Courses</h5>
-				<p>Let your voice be heard. Say whatever you think about the classes you took this semester and help future students make the right decisions.</p>
-			</div>
-		</div>
-	</div>
-	<div class="container">
-		<div class="row">
-			<div class="col s12 m5 card-panel grey lighten-4">
-				<h2>Login</h2>
-				<form method="post">
+	<div id="sign-up-form" class="modal">
+	  	<div id="home-sign-up-form-text-wrapper">
+		<h2 class="center">Sign Up</h2>
+			<form method="post" id="sign-up-form-interior">
 					{% csrf_token %}
-					{% for field in login_form %}
+					{% for field in signup_form %}
 						<p>
 						{{ field.label_tag }}<br>
 						{{ field }}
@@ -146,35 +129,10 @@
 						{% endfor %}
 						</p>
 					{% endfor %}
-					<button class="waves-effect waves-light btn" name="login" type="submit">Login</button>
-					<br>
-				</form>
+				<button class ="waves-effect waves-light btn" type="submit" name ='signup'>Sign up</button>
 				<br>
-			</div>
-			<div class="col s12 m1"></div>
-			<div class="col s12 m5 card-panel grey lighten-4">
-				<h2>Signup</h2>
-				<form method="post">
-						{% csrf_token %}
-						{% for field in signup_form %}
-							<p>
-							{{ field.label_tag }}<br>
-							{{ field }}
-							{% if field.help_text %}
-								<small style="color: grey">{{ field.help_text|safe }}</small>
-							{% endif %}
-							{% for error in field.errors %}
-								<p style="color: red">{{ error }}</p>
-							{% endfor %}
-							</p>
-						{% endfor %}
-					<button class ="waves-effect waves-light btn" type="submit" name ='signup'>Sign up</button>
-					<br>
-				</form>
-				<br>
-			</div>
-			
+			</form>
 		</div>
-	</div> -->
+	</div>
 
 </body>

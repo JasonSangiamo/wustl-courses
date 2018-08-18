@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(window).on('load',function() {
     console.log("initializing");
     console.log(events_array);
     var today = moment();  //get todays date

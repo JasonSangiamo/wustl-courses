@@ -227,7 +227,7 @@ input{
     height: 50px;
 }
 .home-section-text-wrapper{
-    font-size: 1.5em;
+    font-size: 2em;
     display: inline;
 }
 .schedule-section-header{
@@ -245,3 +245,25 @@ input{
 .home-icon{
     font-size: 32px;
 }
+#home-sign-up-form-text-wrapper{
+    margin: 50px;
+}
+.home-page-bullet-list > li{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.bold{
+    font-weight: bold;
+}
+#sign-up-now{
+    margin-top: 10px;
+}
+#home-sign-up-button{
+    background-color: #ee6e73;
+    color: white;
+}
+#home-login-button{
+    background-color: #ee6e73;
+    color: white;
+}
+.modal {  width: 80%; height: 80%; } /* increase the width and height! */
