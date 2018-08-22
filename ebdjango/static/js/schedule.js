@@ -46,10 +46,10 @@ function convertClassSchedule (daysString, start_time, end_time, course_name,sec
     //creating event objects by iterating through days to add
     days_of_week.forEach(function(value){
         events_array.push({
-            title: course_name+"BAH",
-            id: "Zzzzzzzzz",
+            title: course_name,
+            // id: "Zzzzzzzzz",
             className: "course_name:" + course_name + " schedule_object_for" +section_id,
-            id: "Zzzzzzzzzzzzz",
+            // id: "Zzzzzzzzzzzzz",
             start: value + "T" + start_time,
             end: value + "T" + end_time,
         })

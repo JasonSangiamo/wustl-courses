@@ -22,6 +22,10 @@ def home(request, template_name='home/home.html',
     redirect_field_name = 'home'
     redirect_to = request.POST.get(redirect_field_name,
                                    request.GET.get(redirect_field_name, ''))
+    # redirect authenticated users to departments page
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('courses')
+
     if request.method == 'POST':
         if 'signup' in request.POST:
             signup_form = UserCreationForm(request.POST)

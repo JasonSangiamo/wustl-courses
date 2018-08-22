@@ -19,24 +19,9 @@ $(window).on('load',function() {
         editable: false,
         eventLimit: true, // allow "more" link when too many events
         eventSources: [
-
-            // your event source
-            // {
-            //   events: [ // put the array in the `events` property
-            //     {
-            //       title  : 'Event',
-            //       start  : '2012-01-01T10:30:00',
-            //       end   : '2012-01-01T13:30:00'
-            //     }
-                
-            //   ],
-
-            // }
             {
                 events: events_array,
             }
-            // any other event sources...
-
           ]
         
 
